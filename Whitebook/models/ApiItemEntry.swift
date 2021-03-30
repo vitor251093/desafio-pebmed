@@ -10,21 +10,10 @@ import Foundation
 
 struct ApiItemEntry: Codable {
     var category: ApiItemEntryCategory
-    var content: ApiItemEntryContent
+    var content: CategoryItem
     
     struct ApiItemEntryCategory: Codable {
         var id: Int
         var name: String
-    }
-    struct ApiItemEntryContent: Codable {
-        var id: Int
-        var name: String
-        var urlImage: String
-        var description: String
-        var authors: [ApiItemEntryContentAuthor]
-        
-        struct ApiItemEntryContentAuthor: Codable {
-            var name: String
-        }
     }
 }

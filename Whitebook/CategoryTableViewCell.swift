@@ -1,5 +1,5 @@
 //
-//  CategoryItemAuthor.swift
+//  CategoryTableViewCell.swift
 //  Whitebook
 //
 //  Created by Vitor Marques de Miranda on 29/03/21.
@@ -7,7 +7,8 @@
 //
 
 import Foundation
+import UIKit
 
-struct CategoryItemAuthor: Codable {
-    var name: String
+class CategoryTableViewCell: UITableViewCell {
+    @IBOutlet var label: UILabel!
 }
