@@ -22,7 +22,7 @@ class DetailsViewController: UIViewController {
         
         self.nameLabel.text = info?.name
         self.descriptionLabel.text = info?.description
-        self.authorsLabel.text = info!.authors
+        self.authorsLabel.text = "Autores: " + info!.authors
             .map({ (item) -> String in item.name}).joined(separator: ", ")
         
         let url = URL(string: info!.urlImage)!
