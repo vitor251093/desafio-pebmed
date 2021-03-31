@@ -11,7 +11,10 @@ import UIKit
 
 class CategoriesViewController: UITableViewController {
     
-    let categoryCell = "categoryCell"
+    let API_ENDPOINT = "https://private-54fe53-pebmeddesafio.apiary-mock.com/contents"
+    let SHOW_DETAILS_SEGUE = "ShowDetails"
+    let CATEGORY_CELL = "CategoryCell"
+    
     var categories:[Category] = []
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -27,7 +30,7 @@ class CategoriesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! CategoryTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CATEGORY_CELL, for: indexPath) as! CategoryTableViewCell
         cell.label.text = categories[indexPath.section].items[indexPath.row].name
         return cell
     }
@@ -35,11 +38,11 @@ class CategoriesViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let indexPath = tableView.indexPathForSelectedRow!
         let categoryItem = categories[indexPath.section].items[indexPath.row]
-        performSegue(withIdentifier: "ShowDetails", sender: categoryItem)
+        performSegue(withIdentifier: SHOW_DETAILS_SEGUE, sender: categoryItem)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "ShowDetails") {
+        if (segue.identifier == SHOW_DETAILS_SEGUE) {
             let detailsVC = segue.destination as! DetailsViewController
             detailsVC.info = sender as? CategoryItem
         }
@@ -60,7 +63,7 @@ class CategoriesViewController: UITableViewController {
     }
     
     func loadList(callback:@escaping ([Category]) -> Void, errorCallback:@escaping (Error) -> Void) {
-        let url = URL(string: "https://private-54fe53-pebmeddesafio.apiary-mock.com/contents")!
+        let url = URL(string: API_ENDPOINT)!
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
             guard let data = data else {
                 errorCallback(error!)
