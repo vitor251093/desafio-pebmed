@@ -14,6 +14,7 @@ class CategoriesViewController: UITableViewController {
     let API_ENDPOINT = "https://private-54fe53-pebmeddesafio.apiary-mock.com/contents"
     let SHOW_DETAILS_SEGUE = "ShowDetails"
     let CATEGORY_CELL = "CategoryCell"
+    let USER_DEFAULTS_KEY = "cache"
     
     var categories:[Category] = []
     
@@ -80,6 +81,22 @@ class CategoriesViewController: UITableViewController {
                 errorCallback(error)
             }
         #else
+            let defaults = UserDefaults.standard
+            if let dataObj = defaults.object(forKey: USER_DEFAULTS_KEY) {
+                let dataStr = dataObj as! String
+                let data = dataStr.data(using: .utf8)!
+                
+                do {
+                    let entries = try self.apiListFromJsonData(data)
+                    DispatchQueue.main.async {
+                        callback(self.listFromApiList(entries))
+                    }
+                } catch {
+                    errorCallback(error)
+                }
+                return
+            }
+            
             let url = URL(string: API_ENDPOINT)!
             let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
                 guard let data = data else {
@@ -87,6 +104,9 @@ class CategoriesViewController: UITableViewController {
                     return
                 }
                 do {
+                    let dataStr = String.init(data: data, encoding: .utf8)
+                    defaults.set(dataStr, forKey: self.USER_DEFAULTS_KEY)
+                    
                     let entries = try self.apiListFromJsonData(data)
                     DispatchQueue.main.async {
                         callback(self.listFromApiList(entries))
