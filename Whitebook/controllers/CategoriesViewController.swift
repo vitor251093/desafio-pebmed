@@ -62,25 +62,41 @@ class CategoriesViewController: UITableViewController {
         return list
     }
     
+    func apiListFromJsonData(_ json:Data) throws -> [ApiItemEntry] {
+        let decoder = JSONDecoder()
+        return try decoder.decode([ApiItemEntry].self, from:json)
+    }
+    
     func loadList(callback:@escaping ([Category]) -> Void, errorCallback:@escaping (Error) -> Void) {
-        let url = URL(string: API_ENDPOINT)!
-        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-            guard let data = data else {
-                errorCallback(error!)
-                return
-            }
-            
-            let decoder = JSONDecoder()
+        #if TESTS
+            let value = ProcessInfo.processInfo.environment["json"]!
+            let data = value.data(using: .utf8)!
             do {
-                let entries = try decoder.decode([ApiItemEntry].self, from:data)
+                let entries = try self.apiListFromJsonData(data)
                 DispatchQueue.main.async {
                     callback(self.listFromApiList(entries))
                 }
             } catch {
                 errorCallback(error)
             }
-        }
-        task.resume()
+        #else
+            let url = URL(string: API_ENDPOINT)!
+            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                guard let data = data else {
+                    errorCallback(error!)
+                    return
+                }
+                do {
+                    let entries = try self.apiListFromJsonData(data)
+                    DispatchQueue.main.async {
+                        callback(self.listFromApiList(entries))
+                    }
+                } catch {
+                    errorCallback(error)
+                }
+            }
+            task.resume()
+        #endif
     }
     
     override func viewDidLoad() {

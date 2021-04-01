@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct CategoryItemAuthor: Codable {
+struct CategoryItemAuthor: Codable, Equatable {
     var name: String
 }

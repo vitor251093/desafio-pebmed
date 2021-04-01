@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct ApiItemEntry: Codable {
+struct ApiItemEntry: Codable, Equatable {
     var category: ApiItemEntryCategory
     var content: CategoryItem
     
-    struct ApiItemEntryCategory: Codable {
+    struct ApiItemEntryCategory: Codable, Equatable {
         var id: Int
         var name: String
     }

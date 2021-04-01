@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CategoryItem: Codable {
+struct CategoryItem: Codable, Equatable {
     var id: Int
     var name: String
     var urlImage: String
